@@ -1,6 +1,6 @@
 import Header from "./components/Header";
 import SecaoMenu from "./components/SecaoMenu";
-import { produtos } from "./data/produtosL";
+// import { produtos } from "./data/produtosL";
 import Footer from "./components/Footer";
 
 export default function Home() {
