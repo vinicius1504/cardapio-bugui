@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCarrinho } from "../components/CarrinhoContext";
+import Image from "next/image";
 
 export default function Carrinho() {
   const [aberto, setAberto] = useState(false);
@@ -39,7 +40,7 @@ export default function Carrinho() {
                     className="flex justify-between items-center py-4 border-b"
                   >
                     <div className="flex gap-4 items-center">
-                      <img
+                      <Image
                         src={item.imagem}
                         alt={item.nome}
                         className="w-14 h-14 rounded object-cover"

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import ProdutoCard from "./ProdutoCard";
 import { produtos } from "../data/produtosL";
 import { AnimatePresence, motion } from "framer-motion";
