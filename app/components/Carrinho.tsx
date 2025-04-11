@@ -84,7 +84,7 @@ export default function Carrinho() {
                 <span>Total</span>
                 <span>R$ {total().toFixed(2)}</span>
               </div>
-              <button className="w-full bg-green-700 text-white py-3 mt-6 rounded hover:bg-green-800">
+              <button className="w-full bg-green-700 py-3 mt-6 rounded hover:bg-green-800">
                 Confirmar Pedido
               </button>
               <button
