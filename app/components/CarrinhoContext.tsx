@@ -14,6 +14,7 @@ type CarrinhoContextType = {
   alterarQuantidade: (nome: string, delta: number) => void;
   total: () => number;
   limpar: () => void;
+  remover: (nome: string) => void;
 };
 
 const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
@@ -44,6 +45,12 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
     );
   };
 
+
+  const remover = (nome: string) => {
+    setItens(prev => prev.filter(item => item.nome !== nome));
+  };
+  
+
   const total = () => {
     return itens.reduce((soma, item) => {
       const precoNumerico = parseFloat(item.preco.replace("R$", "").replace(",", "."));
@@ -55,7 +62,7 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
 
   return (
     <CarrinhoContext.Provider
-      value={{ itens, adicionar, alterarQuantidade, total, limpar }}
+      value={{ itens, adicionar, alterarQuantidade, total, limpar, remover }}
     >
       {children}
     </CarrinhoContext.Provider>

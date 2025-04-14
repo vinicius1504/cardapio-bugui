@@ -19,7 +19,7 @@ export default function ProdutoCard({nome, descricao,preco,imagem = "/lanche.jpg
       className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between w-full"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      onHoverStart={() => console.log('hover started!')}
+      // onHoverStart={() => console.log('hover started!')}
     >
         {/* Topo */}
         <div className="flex items-center gap-4">

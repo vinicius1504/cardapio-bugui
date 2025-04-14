@@ -1,13 +1,22 @@
 "use client";
 import { useState } from "react";
-import { ShoppingCart, Plus, Minus } from "lucide-react";
+// import CheckoutModal from "./CheckoutModal";
+import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCarrinho } from "../components/CarrinhoContext";
+import { useAlert } from "../hooks/useAlert";
+import Alert from "../components/alerts";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Carrinho() {
   const [aberto, setAberto] = useState(false);
-  const { itens, alterarQuantidade, total } = useCarrinho();
+  const { itens, alterarQuantidade, total, limpar, remover } = useCarrinho();
+  const { alertState, closeAlert, showCancelConfirm } = useAlert();
+  const [mostrarCheckout, setMostrarCheckout] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  if (pathname === "/checkout") return null;
 
   return (
     <>
@@ -27,8 +36,24 @@ export default function Carrinho() {
             transition={{ duration: 0.3 }}
             className="fixed top-0 right-0 h-full w-96 bg-white shadow-lg z-40 p-6 flex flex-col"
           >
-            <h2 className="text-xl font-bold mb-4 text-red-700">Seu Carrinho</h2>
+            <div className="flex justify-between">
+              <h2 className="text-xl font-bold my-4 text-red-700">
+                Seu Carrinho
+              </h2>
 
+              <button
+                onClick={() =>
+                  showCancelConfirm(
+                    "Tem certeza que deseja limpar o carrinho?",
+                    () => limpar()
+                  )
+                }
+                title="Esvaziar carrinho"
+                className="text-red-600 hover:text-red-800 transition"
+              >
+                <Trash2 size={20} />
+              </button>
+            </div>
             {/* Lista de produtos */}
             <div className="flex-1 overflow-y-auto text-gray-950">
               {itens.length === 0 ? (
@@ -43,8 +68,11 @@ export default function Carrinho() {
                       <Image
                         src={item.imagem}
                         alt={item.nome}
-                        className="w-14 h-14 rounded object-cover"
+                        width={56}
+                        height={56}
+                        className="rounded object-cover"
                       />
+
                       <div>
                         <p className="font-semibold">{item.nome}</p>
                         <p className="text-xs">{item.preco}</p>
@@ -53,15 +81,26 @@ export default function Carrinho() {
 
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => alterarQuantidade(item.nome, -1)}
-                        className="bg-red-900 px-2 rounded"
+                        onClick={() => {
+                          if (item.quantidade <= 1) {
+                            showCancelConfirm(
+                              `Deseja remover "${item.nome}" do carrinho?`,
+                              () => remover(item.nome)
+                            );
+                          } else {
+                            alterarQuantidade(item.nome, -1);
+                          }
+                        }}
+                        className="bg-red-500 px-2 rounded"
                       >
                         <Minus size={16} />
                       </button>
-                      <span className="min-w-[24px] text-center">{item.quantidade}</span>
+                      <span className="min-w-[24px] text-center">
+                        {item.quantidade}
+                      </span>
                       <button
                         onClick={() => alterarQuantidade(item.nome, +1)}
-                        className="bg-green-900 px-2 rounded"
+                        className="bg-green-500 px-2 rounded"
                       >
                         <Plus size={16} />
                       </button>
@@ -72,7 +111,7 @@ export default function Carrinho() {
             </div>
 
             {/* Totais */}
-            <div className="mt-4 border-t pt-4 text-sm">
+            <div className="mt-4 border-t pt-4 text-sm text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span>R$ {total().toFixed(2)}</span>
@@ -85,7 +124,10 @@ export default function Carrinho() {
                 <span>Total</span>
                 <span>R$ {total().toFixed(2)}</span>
               </div>
-              <button className="w-full bg-green-700 py-3 mt-6 rounded hover:bg-green-800">
+              <button
+                onClick={() => router.push("/checkout")}
+                className="w-full bg-green-700 py-3 mt-6 rounded text-white hover:bg-green-800"
+              >
                 Confirmar Pedido
               </button>
               <button
@@ -95,6 +137,17 @@ export default function Carrinho() {
                 Fechar
               </button>
             </div>
+            <Alert
+              isOpen={alertState.isOpen}
+              onClose={closeAlert}
+              title={alertState.title}
+              message={alertState.message}
+              type={alertState.type}
+              confirmText={alertState.confirmText}
+              cancelText={alertState.cancelText}
+              showCancel={alertState.showCancel}
+              onConfirm={alertState.onConfirm}
+            />
           </motion.div>
         )}
       </AnimatePresence>
