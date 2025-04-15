@@ -1,5 +1,5 @@
 "use client";
-import {useState } from "react";
+import { useState } from "react";
 import ProdutoCard from "./ProdutoCard";
 import { produtos } from "../data/produtosL";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,10 +10,15 @@ export default function SecaoMenu() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Tudo");
   const [produtosFiltrados, setProdutosFiltrados] = useState(produtos);
   const [loading, setLoading] = useState(false);
+  const [linhasExibidas, setLinhasExibidas] = useState(4);
+
+  const colunas = 3; // corresponde ao md:grid-cols-3
+  const quantidadeExibida = linhasExibidas * colunas;
 
   const filtrarProdutos = (categoria: string) => {
     setLoading(true);
     setCategoriaSelecionada(categoria);
+    setLinhasExibidas(4);
 
     setTimeout(() => {
       const filtrados =
@@ -22,11 +27,14 @@ export default function SecaoMenu() {
           : produtos.filter((p) => p.categoria === categoria);
       setProdutosFiltrados(filtrados);
       setLoading(false);
-    }, 500);
+    }, 200);
   };
 
+  const produtosVisiveis = produtosFiltrados.slice(0, quantidadeExibida);
+  const podeMostrarMais = quantidadeExibida < produtosFiltrados.length;
+
   return (
-    <section className="w-full px-4 pb-20">
+    <section className="w-full px-4 pb-20 min-h-screen">
       {/* Filtros */}
       <div className="flex flex-wrap justify-center gap-2 mb-6">
         {categorias.map((cat) => (
@@ -45,7 +53,7 @@ export default function SecaoMenu() {
       </div>
 
       {/* Grade de produtos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
         {loading ? (
           Array.from({ length: 6 }).map((_, i) => (
             <div
@@ -55,7 +63,7 @@ export default function SecaoMenu() {
           ))
         ) : (
           <AnimatePresence mode="wait">
-            {produtosFiltrados.map((produto, index) => (
+            {produtosVisiveis.map((produto, index) => (
               <motion.div
                 key={produto.nome + index}
                 initial={{ opacity: 0, y: 20 }}
@@ -69,6 +77,18 @@ export default function SecaoMenu() {
           </AnimatePresence>
         )}
       </div>
+
+      {/* Botão de ver mais */}
+      {podeMostrarMais && (
+        <div className="text-center mt-6">
+          <button
+            onClick={() => setLinhasExibidas((prev) => prev + 4)}
+            className="px-6 py-2 bg-red-700 text-white rounded-full hover:bg-red-800 transition"
+          >
+            Ver mais
+          </button>
+        </div>
+      )}
     </section>
   );
 }

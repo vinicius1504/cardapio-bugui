@@ -3,45 +3,53 @@ import { ShoppingCart } from "@deemlol/next-icons";
 import { motion } from "framer-motion";
 // import { adicionar } from "./CarrinhoContext";
 import { useCarrinho } from "./CarrinhoContext";
+import { Star } from "lucide-react";
 
-type ProdutoProps = {
+
+interface ProdutoProps {
   nome: string;
   descricao: string;
   preco: string;
-  imagem?: string;
+  imagem: string;
+  avaliacao?: string;
 };
 
-export default function ProdutoCard({nome, descricao,preco,imagem = "/lanche.jpg",}: ProdutoProps) {
+export default function ProdutoCard({nome, descricao,preco,imagem,avaliacao = '4,5'}: ProdutoProps) {
   const { adicionar } = useCarrinho();
 
   return (
     <motion.div
-      className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between w-full"
-      whileHover={{ scale: 1.1 }}
+      className="bg-white shadow-md rounded-lg p-4 flex xl:flex-row sm:flex-col sm:text-hidden sm:sp"
+      whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       // onHoverStart={() => console.log('hover started!')}
     >
-        {/* Topo */}
-        <div className="flex items-center gap-4">
-          <Image
-            src={imagem}
-            alt={nome}
-            width={70}
-            height={70}
-            className="rounded-full object-cover"
-          />
-          <div className="flex flex-col flex-1">
-            <h3 className="text-base font-bold text-red-700 line-clamp-2">
-              {nome}
-            </h3>
-            <p className="text-xs text-gray-600 line-clamp-3">{descricao}</p>
+       <div className="min-w-[140px] h-[140px] rounded-2xl overflow-hidden mr-5">
+        <Image
+          src={imagem}
+          alt={nome}
+          width={140}
+          height={140}
+          className="object-cover w-full h-full"
+        />e
+      </div>
+
+      <div className="flex-1 flex flex-col justify-between">
+        <div className="flex justify-between items-start">
+          <h3 className="text-xl font-bold text-red-700">{nome}</h3>
+          <div className="flex items-center gap-1 text-yellow-500 font-medium">
+            <span className="text-xl"><Star color="#FFC300" strokeWidth={1.75} fill="#FFC300"/></span>
+            <span className="text-gray-700 text-sm">{avaliacao}</span>
           </div>
         </div>
 
-        {/* Base */}
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-lg font-semibold text-red-600">{preco}</p>
-          <button 
+        <p className="text-sm text-gray-600 leading-snug line-clamp-3">
+          {descricao}
+        </p>
+
+        <div className="flex justify-between items-end mt-2">
+          <p className="text-lg font-bold text-red-600">{preco}</p>
+          <button
             onClick={() =>
               adicionar({
                 nome,
@@ -50,11 +58,11 @@ export default function ProdutoCard({nome, descricao,preco,imagem = "/lanche.jpg
                 // quantidade: 1,
               })
             }
-          
           className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition">
             <ShoppingCart size={18} color="#fff" />
           </button>
         </div>
+      </div>
     </motion.div>
   );
 }

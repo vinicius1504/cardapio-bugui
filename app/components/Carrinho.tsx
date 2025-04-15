@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 // import CheckoutModal from "./CheckoutModal";
-import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, ArrowBigRightDash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCarrinho } from "../components/CarrinhoContext";
 import { useAlert } from "../hooks/useAlert";
@@ -37,6 +37,12 @@ export default function Carrinho() {
             className="fixed top-0 right-0 h-full w-96 bg-white shadow-lg z-40 p-6 flex flex-col"
           >
             <div className="flex justify-between">
+              <button
+                onClick={() => setAberto(false)}
+                className="text-red-600 hover:text-red-800 transition" > 
+                
+                <ArrowBigRightDash size={24} />
+                </button>
               <h2 className="text-xl font-bold my-4 text-red-700">
                 Seu Carrinho
               </h2>

@@ -8,7 +8,7 @@ export const produtos = [
   },
   {
     nome: "Wrap de Frango",
-    descricao: "Frango grelhado com alface, tomate e molho especial",
+    descricao: "Frango grelhado com alface, tomate e molho especial,tomate e molho especial,tomate e molho especial,tomate e molho especial",
     preco: "R$ 28,00",
     imagem: "https://www.themealdb.com/images/media/meals/58oia61564916529.jpg",
     categoria: "Lanches",

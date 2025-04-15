@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCarrinho } from "@/components/CarrinhoContext";
 import Image from "next/image";
 import { useState } from "react";
+import { ArrowBigLeftDash } from "lucide-react";
 
 export default function CheckoutPage() {
   const { itens, total, limpar } = useCarrinho();
@@ -27,9 +28,9 @@ export default function CheckoutPage() {
     <div className="max-w-6xl mx-auto p-6 text-gray-800 bg-white">
       <button
         onClick={() => router.back()}
-        className="mb-4 text-red-600 hover:underline text-sm"
+        className="mb-4 text-red-600 hover:underline text-sm flex items-center gap-2"
       >
-        ← Voltar
+        <ArrowBigLeftDash/> Voltar
       </button>
 
       <h1 className="text-2xl font-bold mb-6 text-red-700 ">Finalizar Pedido</h1>
