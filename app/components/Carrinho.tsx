@@ -1,7 +1,12 @@
 "use client";
-import { useState } from "react";
-// import CheckoutModal from "./CheckoutModal";
-import { ShoppingCart, Plus, Minus, Trash2, ArrowBigRightDash } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import {
+  ShoppingCart,
+  Plus,
+  Minus,
+  Trash2,
+  ArrowBigRightDash,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCarrinho } from "../components/CarrinhoContext";
 import { useAlert } from "../hooks/useAlert";
@@ -11,6 +16,7 @@ import { useRouter, usePathname } from "next/navigation";
 
 export default function Carrinho() {
   const [aberto, setAberto] = useState(false);
+  const carrinhoRef = useRef<HTMLDivElement>(null); // Referência ao carrinho
   const { itens, alterarQuantidade, total, limpar, remover } = useCarrinho();
   const { alertState, closeAlert, showCancelConfirm } = useAlert();
   const [mostrarCheckout, setMostrarCheckout] = useState(false);
@@ -18,18 +24,42 @@ export default function Carrinho() {
   const pathname = usePathname();
   if (pathname === "/checkout") return null;
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        carrinhoRef.current &&
+        !carrinhoRef.current.contains(event.target as Node)
+      ) {
+        setAberto(false);
+      }
+    }
+
+    if (aberto) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [aberto]);
+
   return (
     <>
-      <button
-        onClick={() => setAberto(!aberto)}
-        className="fixed bottom-6 right-6 z-50 bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-lg transition"
-      >
-        <ShoppingCart size={24} />
-      </button>
+      {!aberto && ( // Renderiza o botão apenas se o carrinho não estiver aberto
+        <button
+          onClick={() => setAberto(!aberto)}
+          className="fixed bottom-6 right-6 z-50 bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-lg transition"
+        >
+          <ShoppingCart size={24} />
+        </button>
+      )}
 
       <AnimatePresence>
         {aberto && (
           <motion.div
+            ref={carrinhoRef}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -39,10 +69,10 @@ export default function Carrinho() {
             <div className="flex justify-between">
               <button
                 onClick={() => setAberto(false)}
-                className="text-red-600 hover:text-red-800 transition" > 
-                
+                className="text-red-600 hover:text-red-800 transition"
+              >
                 <ArrowBigRightDash size={24} />
-                </button>
+              </button>
               <h2 className="text-xl font-bold my-4 text-red-700">
                 Seu Carrinho
               </h2>
