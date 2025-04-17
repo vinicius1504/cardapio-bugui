@@ -26,12 +26,12 @@ export default function ProdutoCard({nome, descricao,preco,imagem,avaliacao = '4
     >
        <div className="min-w-[140px] h-[140px] rounded-2xl overflow-hidden mr-5">
         <Image
-          src={imagem}
+          src={imagem || "/placeholder.webp"} // Use a fallback image if imagem is empty
           alt={nome}
           width={140}
           height={140}
           className="object-cover w-full h-full"
-        />e
+        />
       </div>
 
       <div className="flex-1 flex flex-col justify-between">
@@ -54,9 +54,10 @@ export default function ProdutoCard({nome, descricao,preco,imagem,avaliacao = '4
               adicionar({
                 nome,
                 preco,
+                descricao,
+                categoria: "default", // Replace "default" with the appropriate category
                 imagem: imagem || "/lanche.jpg",
-                // quantidade: 1,
-              })
+              }, 1) // Pass a default quantidade of 1
             }
           className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition">
             <ShoppingCart size={18} color="#fff" />

@@ -1,16 +1,10 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-
-type Produto = {
-  nome: string;
-  preco: string;
-  imagem: string;
-  quantidade: number;
-};
+import { ProdutoT } from "@/@types/Produto";
 
 type CarrinhoContextType = {
-  itens: Produto[];
-  adicionar: (produto: Omit<Produto, "quantidade">) => void;
+  itens: ProdutoT[];
+  adicionar: (produto: Omit<ProdutoT, "quantidade">, quantidade?: number) => void;
   alterarQuantidade: (nome: string, delta: number) => void;
   total: () => number;
   limpar: () => void;
@@ -20,31 +14,29 @@ type CarrinhoContextType = {
 const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
 
 export function CarrinhoProvider({ children }: { children: ReactNode }) {
-  const [itens, setItens] = useState<Produto[]>([]);
+  const [itens, setItens] = useState<ProdutoT[]>([]);
 
-  const adicionar = (produto: Omit<Produto, "quantidade">) => {
+  const adicionar = (produto: Omit<ProdutoT, "quantidade">, quantidade: number = 1) => {
     setItens((prev) => {
       const index = prev.findIndex((p) => p.nome === produto.nome);
       if (index !== -1) {
         const novo = [...prev];
-        novo[index].quantidade += 1;
+        novo[index].quantidade = (novo[index].quantidade ?? 0) + quantidade;
         return novo;
       }
-      return [...prev, { ...produto, quantidade: 1 }];
+      return [...prev, { ...produto, quantidade }];
     });
   };
 
   const alterarQuantidade = (nome: string, delta: number) => {
     setItens((prev) =>
-      prev
-        .map((item) =>
-          item.nome === nome
-            ? { ...item, quantidade: Math.max(1, item.quantidade + delta) }
-            : item
-        )
+      prev.map((item) =>
+        item.nome === nome
+          ? { ...item, quantidade: Math.max(1, (item.quantidade ?? 0) + delta) }
+          : item
+      )
     );
   };
-
 
   const remover = (nome: string) => {
     setItens(prev => prev.filter(item => item.nome !== nome));
@@ -54,7 +46,7 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
   const total = () => {
     return itens.reduce((soma, item) => {
       const precoNumerico = parseFloat(item.preco.replace("R$", "").replace(",", "."));
-      return soma + precoNumerico * item.quantidade;
+      return soma + precoNumerico * (item.quantidade ?? 0);
     }, 0);
   };
 

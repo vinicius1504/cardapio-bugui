@@ -1,16 +1,10 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import {
-  ShoppingCart,
-  Plus,
-  Minus,
-  Trash2,
-  ArrowBigRightDash,
-} from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, ArrowBigRightDash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCarrinho } from "../components/CarrinhoContext";
 import { useAlert } from "../hooks/useAlert";
-import Alert from "../components/alerts";
+import Alert from "./ui/alerts";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -19,10 +13,11 @@ export default function Carrinho() {
   const carrinhoRef = useRef<HTMLDivElement>(null); // Referência ao carrinho
   const { itens, alterarQuantidade, total, limpar, remover } = useCarrinho();
   const { alertState, closeAlert, showCancelConfirm } = useAlert();
-  const [mostrarCheckout, setMostrarCheckout] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
-  if (pathname === "/checkout") return null;
+  const pathname = usePathname(); // Always call this hook
+
+  // Prevent rendering the cart UI if on the checkout page
+  const isCheckoutPage = pathname === "/checkout";
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -45,15 +40,21 @@ export default function Carrinho() {
     };
   }, [aberto]);
 
+  if (isCheckoutPage) {
+    return null;
+  }
+
   return (
     <>
       {!aberto && ( // Renderiza o botão apenas se o carrinho não estiver aberto
-        <button
-          onClick={() => setAberto(!aberto)}
-          className="fixed bottom-6 right-6 z-50 bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-lg transition"
-        >
-          <ShoppingCart size={24} />
-        </button>
+
+          <button
+            onClick={() => setAberto(!aberto)}
+            className="fixed bottom-6 right-6 z-50 bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-lg transition"
+          >
+            <ShoppingCart size={24} />
+          </button>
+
       )}
 
       <AnimatePresence>
@@ -73,9 +74,7 @@ export default function Carrinho() {
               >
                 <ArrowBigRightDash size={24} />
               </button>
-              <h2 className="text-xl font-bold my-4 text-red-700">
-                Seu Carrinho
-              </h2>
+              <h2 className="text-xl font-bold my-4 text-red-700">Seu Carrinho</h2>
 
               <button
                 onClick={() =>
@@ -102,7 +101,7 @@ export default function Carrinho() {
                   >
                     <div className="flex gap-4 items-center">
                       <Image
-                        src={item.imagem}
+                        src={item.imagem || "/placeholder.webp"} // Use a fallback image if item.imagem is empty
                         alt={item.nome}
                         width={56}
                         height={56}
@@ -118,7 +117,7 @@ export default function Carrinho() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => {
-                          if (item.quantidade <= 1) {
+                          if ((item.quantidade ?? 0) <= 1) {
                             showCancelConfirm(
                               `Deseja remover "${item.nome}" do carrinho?`,
                               () => remover(item.nome)

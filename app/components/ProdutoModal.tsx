@@ -1,18 +1,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
-
-interface Produto {
-  nome: string;
-  descricao: string;
-  preco: string;
-  imagem: string;
-}
+import { ProdutoT } from "@/.@types/Produto";
 
 interface ProdutoModalProps {
-  produto: Produto;
+  produto: ProdutoT;
   onClose: () => void;
-  onAdd: (produto: Produto, quantidade: number) => void;
+  onAdd: (produto: ProdutoT, quantidade: number) => void;
 }
 
 export default function ProdutoModal({
@@ -36,7 +30,7 @@ export default function ProdutoModal({
         <div className="grid md:grid-cols-2">
           <div className="h-96 relative">
             <Image
-              src={produto.imagem}
+              src={produto.imagem || "/placeholder.webp"} // Use a fallback image if produto.imagem is empty
               alt={produto.nome}
               fill
               className="object-cover"
@@ -78,7 +72,7 @@ export default function ProdutoModal({
               </div>
               <button
                 onClick={() => {
-                  onAdd(produto, quantidade);
+                  onAdd(produto, quantidade); // Ensure quantidade is passed correctly
                   onClose();
                 }}
                 className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded font-semibold"

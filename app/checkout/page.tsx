@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCarrinho } from "@/components/CarrinhoContext";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowBigLeftDash } from "lucide-react";
 
 export default function CheckoutPage() {
@@ -14,15 +14,24 @@ export default function CheckoutPage() {
   const [endereco, setEndereco] = useState({ rua: "", cidade: "" });
 
   const buscarCep = async (cep: string) => {
-    if (cep.length === 8 || cep.length === 9) {
+    try {
       const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      if (!res.ok) throw new Error("Erro ao buscar CEP");
       const data = await res.json();
       setEndereco({
         rua: data.logradouro || "",
         cidade: data.localidade || "",
       });
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
     }
   };
+
+  useEffect(() => {
+    if (cep.length === 8 || cep.length === 9) {
+      buscarCep(cep);
+    }
+  }, [cep]);
 
   return (
     <div className="max-w-6xl mx-auto p-6 text-gray-800 bg-white">
@@ -30,7 +39,7 @@ export default function CheckoutPage() {
         onClick={() => router.back()}
         className="mb-4 text-red-600 hover:underline text-sm flex items-center gap-2"
       >
-        <ArrowBigLeftDash/> Voltar
+        <ArrowBigLeftDash /> Voltar
       </button>
 
       <h1 className="text-2xl font-bold mb-6 text-red-700 ">Finalizar Pedido</h1>
@@ -68,11 +77,7 @@ export default function CheckoutPage() {
               className="w-1/2 border p-2 rounded"
               placeholder="CEP"
               value={cep}
-              onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, ""); // só números
-                setCep(val);
-                if (val.length >= 8) buscarCep(val);
-              }}
+              onChange={(e) => setCep(e.target.value.replace(/\D/g, ""))}
             />
           </div>
 
@@ -124,7 +129,7 @@ export default function CheckoutPage() {
                 >
                   <div className="flex items-center gap-3">
                     <Image
-                      src={item.imagem}
+                      src={item.imagem || "/placeholder.webp"} // Use a fallback image if item.imagem is empty
                       alt={item.nome}
                       width={50}
                       height={50}
@@ -140,7 +145,7 @@ export default function CheckoutPage() {
                   <span className="font-semibold text-red-700">
                     R${" "}
                     {Number(item.preco.replace("R$ ", "").replace(",", ".")) *
-                      item.quantidade}
+                      (item.quantidade ?? 0)}
                   </span>
                 </li>
               ))}

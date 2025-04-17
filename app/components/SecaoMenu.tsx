@@ -5,16 +5,21 @@ import { produtosD } from "../data/produtosL";
 import { AnimatePresence, motion } from "framer-motion";
 import ProdutoModal from "./ProdutoModal";
 import { ProdutoT } from "@/.@types/Produto";
+import { useCarrinho } from "./CarrinhoContext";
+import { MagneticButton } from "../components/ui/magnetic-button";
 
 const categorias = ["Tudo", ...new Set(produtosD.map((p) => p.categoria))];
 
 export default function SecaoMenu() {
+  const { adicionar } = useCarrinho();
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Tudo");
   const [produtosFiltrados, setProdutosFiltrados] = useState(produtosD);
   const [loading, setLoading] = useState(false);
   const [linhasExibidas, setLinhasExibidas] = useState(4);
   const [termoPesquisa, setTermoPesquisa] = useState("");
-  const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoT | null>(null);
+  const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoT | null>(
+    null
+  );
   const colunas = 3;
   const quantidadeExibida = linhasExibidas * colunas;
 
@@ -57,7 +62,7 @@ export default function SecaoMenu() {
           produto={produtoSelecionado}
           onClose={() => setProdutoSelecionado(null)}
           onAdd={(produto, qtd) => {
-            // adicionarAoCarrinho(produto, qtd); // adicione sua lógica aqui
+            adicionar(produto, qtd); // Add the product to the cart
             setProdutoSelecionado(null);
           }}
         />
@@ -121,12 +126,14 @@ export default function SecaoMenu() {
 
         {podeMostrarMais && (
           <div className="text-center mt-6">
-            <button
-              onClick={() => setLinhasExibidas((prev) => prev + 4)}
-              className="px-6 py-2 bg-red-700 text-white rounded-full hover:bg-red-800 transition"
-            >
-              Ver mais
-            </button>
+            <MagneticButton>
+              <button
+                onClick={() => setLinhasExibidas((prev) => prev + 4)}
+                className="px-6 py-2 bg-red-700 text-white rounded-full hover:bg-red-800 transition"
+              >
+                Ver mais
+              </button>
+            </MagneticButton>
           </div>
         )}
       </section>
