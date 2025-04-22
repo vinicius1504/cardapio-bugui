@@ -3,14 +3,14 @@ import React from "react";
 
 export default function Header() {
   return (
-    <header className="relative h-[300px] sm:h-[400px] w-full overflow-hidden">
+    <header className="relative h-[500px] sm:h-[400px] w-full overflow-hidden">
       {/* Vídeo de fundo */}
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover"
+        className="absolute top-0 left-0 w-full h-full object-cover pt-"
       >
         <source src="/videos/fundo.mp4" type="video/mp4" />
         Seu navegador não suporta vídeos.

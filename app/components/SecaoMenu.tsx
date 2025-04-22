@@ -68,7 +68,7 @@ export default function SecaoMenu() {
         />
       )}
 
-      <section className="w-full px-4 pb-20 min-h-screen">
+      <section className="w-full px-4 pb-20 min-h-screen bg">
         {/* Filtros e Pesquisa */}
         <div className="flex flex-wrap items-center justify-between max-w-7xl mx-auto mb-6">
           <div className="flex flex-wrap gap-2">
@@ -126,14 +126,17 @@ export default function SecaoMenu() {
 
         {podeMostrarMais && (
           <div className="text-center mt-6">
-            <MagneticButton>
-              <button
-                onClick={() => setLinhasExibidas((prev) => prev + 4)}
-                className="px-6 py-2 bg-red-700 text-white rounded-full hover:bg-red-800 transition"
-              >
-                Ver mais
-              </button>
-            </MagneticButton>
+            {/* Restrict MagneticButton movement */}
+            <div className="relative w-40 h-40 mx-auto">
+              <MagneticButton>
+                <button
+                  onClick={() => setLinhasExibidas((prev) => prev + 4)}
+                  className="px-6 py-2 bg-red-700 text-white rounded-full hover:bg-red-800 transition"
+                >
+                  Ver mais
+                </button>
+              </MagneticButton>
+            </div>
           </div>
         )}
       </section>

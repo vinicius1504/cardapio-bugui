@@ -3,14 +3,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-const SPRING_CONFIG = { damping: 100, stiffness: 400 };
+const SPRING_CONFIG = { damping: 20, stiffness: 250 };
 
 type MagneticButtonType = {
   children: React.ReactNode;
   distance?: number;
 };
 
-function MagneticButton({ children, distance = 0.6 }: MagneticButtonType) {
+function MagneticButton({ children, distance = 0.45 }: MagneticButtonType) {
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

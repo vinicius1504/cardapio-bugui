@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 
 export default function Home() {
   return (
-	<main className="flex flex-col min-h-screen bg-red-50">
+	<main className="flex flex-col min-h-screen bg-[#fff1e6]">
 	  <Header />
 	  <section className="text-center py-10 text-red-800 text-xl font-medium">
 		Conheça nosso menu 🍔
