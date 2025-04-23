@@ -14,6 +14,8 @@ interface ProdutoProps {
   avaliacao?: string;
 };
 
+
+
 export default function ProdutoCard({nome, descricao,preco,imagem,avaliacao = '4,5'}: ProdutoProps) {
   const { adicionar } = useCarrinho();
 
