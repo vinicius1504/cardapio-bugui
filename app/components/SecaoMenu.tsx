@@ -1,19 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
 import ProdutoCard from "./ProdutoCard";
-import { produtosD } from "../data/produtosL";
+import { useProdutos } from "../hooks/useProducts";
 import { AnimatePresence, motion } from "framer-motion";
 import ProdutoModal from "./ProdutoModal";
 import { ProdutoT } from "@/.@types/Produto";
 import { useCarrinho } from "./CarrinhoContext";
 import { MagneticButton } from "../components/ui/magnetic-button";
 
-const categorias = ["Tudo", ...new Set(produtosD.map((p) => p.categoria))];
-
 export default function SecaoMenu() {
+  const { produtos, loading: produtosLoading } = useProdutos(); // Destructure produtos and loading
+  const categorias = ["Tudo", ...new Set(produtos.map((p) => p.categoria))];
+
   const { adicionar } = useCarrinho();
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Tudo");
-  const [produtosFiltrados, setProdutosFiltrados] = useState(produtosD);
+  const [produtosFiltrados, setProdutosFiltrados] = useState(produtos);
   const [loading, setLoading] = useState(false);
   const [linhasExibidas, setLinhasExibidas] = useState(4);
   const [termoPesquisa, setTermoPesquisa] = useState("");
@@ -23,6 +24,10 @@ export default function SecaoMenu() {
   const colunas = 3;
   const quantidadeExibida = linhasExibidas * colunas;
 
+  useEffect(() => {
+    setProdutosFiltrados(produtos); // Update filtered products when produtos changes
+  }, [produtos]);
+
   const filtrarProdutos = (categoria: string) => {
     setLoading(true);
     setCategoriaSelecionada(categoria);
@@ -31,8 +36,8 @@ export default function SecaoMenu() {
     setTimeout(() => {
       const filtrados =
         categoria === "Tudo"
-          ? produtosD
-          : produtosD.filter((p) => p.categoria === categoria);
+          ? produtos
+          : produtos.filter((p) => p.categoria === categoria);
       setProdutosFiltrados(filtrados);
       setLoading(false);
     }, 200);
@@ -43,7 +48,7 @@ export default function SecaoMenu() {
     setTermoPesquisa(termo);
 
     setTimeout(() => {
-      const filtrados = produtosD.filter((p) =>
+      const filtrados = produtos.filter((p) =>
         p.nome.toLowerCase().includes(termo.toLowerCase())
       );
       setProdutosFiltrados(filtrados);
@@ -98,7 +103,7 @@ export default function SecaoMenu() {
 
         {/* Produtos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl mx-auto max-h-[calc(100vh-250px)] overflow-y-auto custom-scrollbar">
-          {loading ? (
+          {loading || produtosLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
@@ -117,7 +122,7 @@ export default function SecaoMenu() {
                   className="cursor-pointer"
                   onClick={() => setProdutoSelecionado(produto)}
                 >
-                  <ProdutoCard {...produto} />
+                  <ProdutoCard {...produto} avaliacao={produto.avaliacao?.toString()} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -127,7 +132,7 @@ export default function SecaoMenu() {
         {podeMostrarMais && (
           <div className="text-center mt-6">
             {/* Restrict MagneticButton movement */}
-            <div className="relative w-40 h-40 mx-auto">
+            <div className="relative inline-block">
               <MagneticButton>
                 <button
                   onClick={() => setLinhasExibidas((prev) => prev + 4)}

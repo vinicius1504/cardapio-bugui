@@ -18,6 +18,7 @@ export default function Carrinho() {
 
   // Prevent rendering the cart UI if on the checkout page
   const isCheckoutPage = pathname === "/checkout";
+  const isAdmPage = pathname === "/adm";
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -41,6 +42,10 @@ export default function Carrinho() {
   }, [aberto]);
 
   if (isCheckoutPage) {
+    return null;
+  }
+
+  if (isAdmPage) {
     return null;
   }
 
