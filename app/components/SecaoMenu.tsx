@@ -1,31 +1,36 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useMemo } from "react";
 import ProdutoCard from "./ProdutoCard";
-import { useProdutos } from "../hooks/useProducts";
+import { useProducts } from "../hooks/useProducts";
 import { AnimatePresence, motion } from "framer-motion";
 import ProdutoModal from "./ProdutoModal";
-import { ProdutoT } from "@/.@types/Produto";
+import { ProdutoT } from "@/@types/Produto";
 import { useCarrinho } from "./CarrinhoContext";
 import { MagneticButton } from "../components/ui/magnetic-button";
 
 export default function SecaoMenu() {
-  const { produtos, loading: produtosLoading } = useProdutos(); // Destructure produtos and loading
-  const categorias = ["Tudo", ...new Set(produtos.map((p) => p.categoria))];
+  const {
+    produtos,loading: produtosLoading, } = useProducts();
 
   const { adicionar } = useCarrinho();
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Tudo");
-  const [produtosFiltrados, setProdutosFiltrados] = useState(produtos);
+  const [produtosFiltrados, setProdutosFiltrados] = useState<ProdutoT[]>([]);
   const [loading, setLoading] = useState(false);
   const [linhasExibidas, setLinhasExibidas] = useState(4);
   const [termoPesquisa, setTermoPesquisa] = useState("");
-  const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoT | null>(
-    null
-  );
+  const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoT | null>(null);
+
   const colunas = 3;
   const quantidadeExibida = linhasExibidas * colunas;
 
+  const categorias = useMemo(() => {
+    const únicas = Array.from(new Set(produtos.map((p) => p.categoria)));
+    return ["Tudo", ...únicas];
+  }, [produtos]);
+
   useEffect(() => {
-    setProdutosFiltrados(produtos); // Update filtered products when produtos changes
+    setProdutosFiltrados(produtos);
   }, [produtos]);
 
   const filtrarProdutos = (categoria: string) => {
@@ -61,13 +66,12 @@ export default function SecaoMenu() {
 
   return (
     <>
-      {/* Modal */}
       {produtoSelecionado && (
         <ProdutoModal
           produto={produtoSelecionado}
           onClose={() => setProdutoSelecionado(null)}
           onAdd={(produto, qtd) => {
-            adicionar(produto, qtd); // Add the product to the cart
+            adicionar(produto, qtd);
             setProdutoSelecionado(null);
           }}
         />
@@ -105,10 +109,7 @@ export default function SecaoMenu() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl mx-auto max-h-[calc(100vh-250px)] overflow-y-auto custom-scrollbar">
           {loading || produtosLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-52 bg-gray-200 animate-pulse rounded-xl"
-              ></div>
+              <div key={i} className="h-52 bg-gray-200 animate-pulse rounded-xl"></div>
             ))
           ) : (
             <AnimatePresence mode="wait">
@@ -122,16 +123,16 @@ export default function SecaoMenu() {
                   className="cursor-pointer"
                   onClick={() => setProdutoSelecionado(produto)}
                 >
-                  <ProdutoCard {...produto} avaliacao={produto.avaliacao?.toString()} />
+                  <ProdutoCard {...produto} />
                 </motion.div>
               ))}
             </AnimatePresence>
           )}
         </div>
 
+        {/* Ver mais */}
         {podeMostrarMais && (
           <div className="text-center mt-6">
-            {/* Restrict MagneticButton movement */}
             <div className="relative inline-block">
               <MagneticButton>
                 <button

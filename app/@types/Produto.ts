@@ -1,9 +1,12 @@
 export type ProdutoT = {
+	_id?: string;
 	nome: string;
 	descricao: string;
 	preco: string;
 	imagem: string;
 	categoria: string;
-	quantidade?: number;
+	ativo: boolean;
+	avaliacao?: string;
+	quantidade?: string;
   };
   
