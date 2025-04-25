@@ -21,7 +21,7 @@ export default function ProdutoCard({nome, descricao,preco,imagem,avaliacao = '4
 
   return (
     <motion.div
-      className="bg-white shadow-md rounded-lg p-4 flex xl:flex-row sm:flex-col sm:text-hidden sm:sp"
+      className="bg-white shadow-md rounded-lg p-4 flex xl:flex-row sm:flex-col sm:text-hidden h-[200px]"
       whileHover={{ scale: 1.0 }}
       whileTap={{ scale: 0.95 }}
       // onHoverStart={() => console.log('hover started!')}
