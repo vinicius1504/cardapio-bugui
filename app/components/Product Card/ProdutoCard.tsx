@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ShoppingCart } from "@deemlol/next-icons";
 import { motion } from "framer-motion";
 // import { adicionar } from "./CarrinhoContext";
-import { useCarrinho } from "./CarrinhoContext";
+import { useCarrinho } from "../Shoppingcart/CarrinhoContext";
 import { Star } from "lucide-react";
 
 
@@ -54,12 +54,13 @@ export default function ProdutoCard({nome, descricao,preco,imagem,avaliacao = '4
           <button
             onClick={() =>
               adicionar({
-                nome,
-                preco,
-                descricao,
-                categoria: "default", // Replace "default" with the appropriate category
-                imagem: imagem || "/lanche.jpg",
-              }, 1) // Pass a default quantidade of 1
+                              nome,
+                              preco,
+                              descricao,
+                              categoria: "default", // Replace "default" with the appropriate category
+                              imagem: imagem || "/lanche.jpg",
+                              ativo: true, // Add the required 'ativo' property
+                            }, 1) // Pass a default quantidade of 1
             }
           className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition">
             <ShoppingCart size={18} color="#fff" />

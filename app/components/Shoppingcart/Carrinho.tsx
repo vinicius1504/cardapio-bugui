@@ -2,9 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Plus, Minus, Trash2, ArrowBigRightDash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useCarrinho } from "../components/CarrinhoContext";
-import { useAlert } from "../hooks/useAlert";
-import Alert from "./ui/alerts";
+import { useCarrinho } from "./CarrinhoContext";
+import { useAlert } from "../../hooks/useAlert";
+import Alert from "../ui/alerts";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -122,7 +122,7 @@ export default function Carrinho() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => {
-                          if ((item.quantidade ?? 0) <= 1) {
+                          if (Number(item.quantidade ?? 0) <= 1) {
                             showCancelConfirm(
                               `Deseja remover "${item.nome}" do carrinho?`,
                               () => remover(item.nome)
@@ -165,7 +165,7 @@ export default function Carrinho() {
                 <span>R$ {total().toFixed(2)}</span>
               </div>
               <button
-                onClick={() => router.push("/checkout")}
+                onClick={() => router.push("/pages/checkout")}
                 className="w-full bg-green-700 py-3 mt-6 rounded text-white hover:bg-green-800"
               >
                 Confirmar Pedido

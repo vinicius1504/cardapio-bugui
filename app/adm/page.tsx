@@ -2,7 +2,7 @@
 
 import { useState } from "react"; // Import useState
 import { useProducts } from "../hooks/useProducts";
-import FormCadastroProduto from "../components/FormsCadPdt";
+import FormCadastroProduto from "../components/FormsCadProduct/FormsCadPdt";
 import ModalProduto from "../components/ui/ModalProduto";
 
 export default function ProdutosPage() {

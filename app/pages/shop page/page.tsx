@@ -1,7 +1,7 @@
-import Header from "../components/Header";
-import SecaoMenu from "../components/SecaoMenu";
+import Header from "../../components/Header-Footer/Header";
+import SecaoMenu from "../../components/Session Menu/SecaoMenu";
 // import { produtos } from "./data/produtosL";
-import Footer from "../components/Footer";
+import Footer from "../../components/Header-Footer/Footer";
 
 export default function Home() {
   return (

@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import ProdutoCard from "./ProdutoCard";
-import { useProducts } from "../hooks/useProducts";
+import ProdutoCard from "../Product Card/ProdutoCard";
+import { useProducts } from "../../hooks/useProducts";
 import { AnimatePresence, motion } from "framer-motion";
-import ProdutoModal from "./ProdutoModal";
+import ProdutoModal from "../Product Modal/ProdutoModal";
 import { ProdutoT } from "@/@types/Produto";
-import { useCarrinho } from "./CarrinhoContext";
-import { MagneticButton } from "../components/ui/magnetic-button";
+import { useCarrinho } from "../Shoppingcart/CarrinhoContext";
+import { MagneticButton } from "../ui/magnetic-button";
 
 export default function SecaoMenu() {
-  const {
-    produtos,loading: produtosLoading, } = useProducts();
-
+  const {produtos,loading: produtosLoading, } = useProducts();
   const { adicionar } = useCarrinho();
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Tudo");
   const [produtosFiltrados, setProdutosFiltrados] = useState<ProdutoT[]>([]);
@@ -20,9 +18,9 @@ export default function SecaoMenu() {
   const [linhasExibidas, setLinhasExibidas] = useState(4);
   const [termoPesquisa, setTermoPesquisa] = useState("");
   const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoT | null>(null);
-
-  const colunas = 3;
-  const quantidadeExibida = linhasExibidas * colunas;
+  const colunas = 3; const quantidadeExibida = linhasExibidas * colunas;
+  const produtosVisiveis = produtosFiltrados.slice(0, quantidadeExibida);
+  const podeMostrarMais = quantidadeExibida < produtosFiltrados.length;
 
   const categorias = useMemo(() => {
     const únicas = Array.from(new Set(produtos.map((p) => p.categoria)));
@@ -60,9 +58,6 @@ export default function SecaoMenu() {
       setLoading(false);
     }, 200);
   };
-
-  const produtosVisiveis = produtosFiltrados.slice(0, quantidadeExibida);
-  const podeMostrarMais = quantidadeExibida < produtosFiltrados.length;
 
   return (
     <>

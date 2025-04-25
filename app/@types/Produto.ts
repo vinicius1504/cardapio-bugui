@@ -7,6 +7,6 @@ export type ProdutoT = {
 	categoria: string;
 	ativo: boolean;
 	avaliacao?: string;
-	quantidade?: string;
+	quantidade?: number;
   };
   

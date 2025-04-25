@@ -46,7 +46,7 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
   const total = () => {
     return itens.reduce((soma, item) => {
       const precoNumerico = parseFloat(item.preco.replace("R$", "").replace(",", "."));
-      return soma + precoNumerico * (item.quantidade ?? 0);
+      return soma + precoNumerico * Number(item.quantidade ?? 0);
     }, 0);
   };
 
