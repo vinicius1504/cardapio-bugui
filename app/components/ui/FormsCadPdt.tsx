@@ -1,0 +1,156 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useProducts } from "@/hooks/useProducts";
+
+interface FormCadastroProdutoProps {
+  fecharModal: () => void;
+  produto?: any;
+}
+
+export default function FormCadastroProduto({ fecharModal, produto }: FormCadastroProdutoProps) {
+  const { createProduto, updateProduto } = useProducts();
+  const [form, setForm] = useState({
+    id: null, // Adicionado para armazenar o ID do produto
+    nome: "",
+    descricao: "",
+    preco: "",
+    categoria: "",
+    imagem: "",
+    ativo: true,
+  });
+
+  useEffect(() => {
+    if (produto) {
+      setForm({
+        id: produto.id ?? null, // Preenche o ID do produto, se existir
+        nome: produto.nome ?? "",
+        descricao: produto.descricao ?? "",
+        preco: produto.preco ?? "",
+        categoria: produto.categoria ?? "",
+        imagem: produto.imagem ?? "",
+        ativo: produto.ativo ?? true,
+      });
+    }
+  }, [produto]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (form.id) {
+        // Atualizar produto existente
+        await updateProduto(form.id, form); // Usa o ID do formulário
+        alert("Produto atualizado com sucesso!");
+      } else {
+        // Criar novo produto
+        await createProduto(form);
+        alert("Produto cadastrado com sucesso!");
+      }
+      fecharModal(); // Fecha o modal após salvar
+    } catch (error) {
+      console.error("Erro ao salvar produto:", error);
+      alert("Erro ao salvar produto.");
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 w-full max-w-2xl">
+      <div>
+        <label className="block text-sm font-medium mb-1">Nome</label>
+        <input
+          type="text"
+          name="nome"
+          value={form.nome}
+          onChange={handleChange}
+          className="w-full border border-black p-2 rounded"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Descrição</label>
+        <textarea
+          name="descricao"
+          value={form.descricao}
+          onChange={handleChange}
+          className="w-full border border-black p-2 rounded"
+          rows={3}
+        />
+      </div>
+
+      <div className="flex gap-4">
+        <div className="flex-1">
+          <label className="block text-sm font-medium mb-1">Preço</label>
+          <input
+            type="text"
+            name="preco"
+            value={form.preco}
+            onChange={handleChange}
+            className="w-full border border-black p-2 rounded"
+          />
+        </div>
+        <div className="flex-1">
+          <label className="block text-sm font-medium mb-1">Categorisa</label>
+          <input
+            type="text"
+            name="categoria"
+            value={form.categoria}
+            onChange={handleChange}
+            className="w-full border border-black p-2 rounded"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">URL da imagem</label>
+        <input
+          type="text"
+          name="imagem"
+          value={form.imagem}
+          onChange={handleChange}
+          className="w-full border border-black p-2 rounded"
+        />
+      </div>
+
+      <div className="flex items-center gap-3">
+        <label className="text-sm">Status:</label>
+        <div
+          onClick={() => setForm((prev) => ({ ...prev, ativo: !prev.ativo }))}
+          className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
+            form.ativo ? "bg-green-500" : "bg-gray-400"
+          }`}
+        >
+          <div
+            className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${
+              form.ativo ? "translate-x-6" : "translate-x-0"
+            }`}
+          />
+        </div>
+        <span className="text-sm">{form.ativo ? "Ativado" : "Desativado"}</span>
+      </div>
+
+      <div className="flex justify-end gap-4 pt-4">
+        <button
+          type="button"
+          onClick={fecharModal}
+          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          Salvar
+        </button>
+      </div>
+    </form>
+  );
+}

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import ProdutoCard from "../Product Card/ProdutoCard";
+import ProdutoCard from "../ProductCard/ProdutoCard";
 import { useProducts } from "../../hooks/useProducts";
 import { AnimatePresence, motion } from "framer-motion";
-import ProdutoModal from "../Product Modal/ProdutoModal";
+import ProdutoModal from "../ProductModal/ProdutoModal";
 import { ProdutoT } from "@/@types/Produto";
 import { useCarrinho } from "../Shoppingcart/CarrinhoContext";
 import { MagneticButton } from "../ui/magnetic-button";
