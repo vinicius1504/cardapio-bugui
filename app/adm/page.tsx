@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useProducts } from "../hooks/useProducts";
-import FormCadastroProduto from "../components/ui/FormsCadPdt";
-import ModalProduto from "../components/ui/ModalProduto";
-import TabelaProdutos from "../components/ProductTable/TabelaProdutos";
+import { useProducts } from "../../hooks/useProducts";
+import FormCadastroProduto from "../../components/ui/FormsCadPdt";
+import ModalProduto from "../../components/ui/ModalProduto";
+import TabelaProdutos from "../../components/Produtos/ProductTable/TabelaProdutos";
 
 export default function ProdutosPage() {
   const { produtos, loading } = useProducts();
@@ -16,7 +16,7 @@ export default function ProdutosPage() {
   };
 
   const abrirModalEditar = (produto: any) => {
-    setProdutoSelecionado(produto); // setar produto a editar
+    setProdutoSelecionado({ ...produto, id: produto._id }); // Garante que o ID seja passado corretamente
     setModalAberto(true);
   };
 
@@ -40,6 +40,7 @@ export default function ProdutosPage() {
         <FormCadastroProduto
           fecharModal={() => setModalAberto(false)}
           produto={produtoSelecionado} // 👈 passar produto como prop
+          modo={produtoSelecionado ? "editar" : "cadastrar"} // Define o modo
         />
       </ModalProduto>
     </div>

@@ -1,13 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useProducts } from "@/hooks/useProducts";
+import { useAlert } from "@/hooks/useAlert";
+import Alert from "./alerts";
 
 interface FormCadastroProdutoProps {
   fecharModal: () => void;
   produto?: any;
+  modo: "editar" | "cadastrar";
 }
 
-export default function FormCadastroProduto({ fecharModal, produto }: FormCadastroProdutoProps) {
+export default function FormCadastroProduto({
+  fecharModal,
+  produto,
+  modo,
+}: FormCadastroProdutoProps) {
+  const { showSuccess, showError, alertState, closeAlert } = useAlert();
   const { createProduto, updateProduto } = useProducts();
   const [form, setForm] = useState({
     id: null, // Adicionado para armazenar o ID do produto
@@ -33,35 +41,56 @@ export default function FormCadastroProduto({ fecharModal, produto }: FormCadast
     }
   }, [produto]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type, checked } = e.target as HTMLInputElement;
+  
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:
+        name === "preco"
+          ? formatarPreco(value)
+          : type === "checkbox"
+          ? checked
+          : value,
     }));
+  };
+  
+  const formatarPreco = (valor: string) => {
+    const valorNumerico = parseFloat(valor.replace(/[^\d]/g, "")) / 100;
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(valorNumerico);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      if (form.id) {
-        // Atualizar produto existente
-        await updateProduto(form.id, form); // Usa o ID do formulário
-        alert("Produto atualizado com sucesso!");
-      } else {
-        // Criar novo produto
+      if (modo === "editar" && form.id) {
+        const { id, ...produtoData } = form;
+        await updateProduto(form.id, produtoData);
+        showSuccess("Produto atualizado com sucesso!"); // ✅ Aqui usa o alerta sucesso
+
+      } else if (modo === "cadastrar") {
         await createProduto(form);
-        alert("Produto cadastrado com sucesso!");
+        showSuccess("Produto cadastrado com sucesso!"); // ✅ Aqui usa o alerta sucesso
       }
-      fecharModal(); // Fecha o modal após salvar
+
+      fecharModal(); // Fecha modal depois de mostrar alerta
     } catch (error) {
       console.error("Erro ao salvar produto:", error);
-      alert("Erro ao salvar produto.");
+      showError("Erro ao salvar o produto!"); // ✅ Aqui usa o alerta de erro
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 w-full max-w-2xl">
+      <h2 className="text-lg font-bold">
+        {modo === "editar" ? "Editar Produto" : "Cadastrar Produto"}
+      </h2>
       <div>
         <label className="block text-sm font-medium mb-1">Nome</label>
         <input
@@ -97,7 +126,7 @@ export default function FormCadastroProduto({ fecharModal, produto }: FormCadast
           />
         </div>
         <div className="flex-1">
-          <label className="block text-sm font-medium mb-1">Categorisa</label>
+          <label className="block text-sm font-medium mb-1">Categoria</label>
           <input
             type="text"
             name="categoria"
@@ -151,6 +180,17 @@ export default function FormCadastroProduto({ fecharModal, produto }: FormCadast
           Salvar
         </button>
       </div>
+      <Alert
+        isOpen={alertState.isOpen}
+        onClose={closeAlert}
+        title={alertState.title}
+        message={alertState.message}
+        type={alertState.type}
+        confirmText={alertState.confirmText}
+        cancelText={alertState.cancelText}
+        showCancel={alertState.showCancel}
+        onConfirm={alertState.onConfirm}
+      />
     </form>
   );
 }

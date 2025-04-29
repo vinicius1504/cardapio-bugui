@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ShoppingCart } from "@deemlol/next-icons";
 import { motion } from "framer-motion";
 // import { adicionar } from "./CarrinhoContext";
-import { useCarrinho } from "../Shoppingcart/CarrinhoContext";
+import { useCarrinho } from "../../layout/Shoppingcart/CarrinhoContext";
 import { Star } from "lucide-react";
 
 

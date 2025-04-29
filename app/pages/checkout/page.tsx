@@ -1,7 +1,7 @@
 // app/checkout/page.tsx
 "use client";
 import { useRouter } from "next/navigation";
-import { useCarrinho } from "@/components/Shoppingcart/CarrinhoContext";
+import { useCarrinho } from "@/components/layout/Shoppingcart/CarrinhoContext";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { ArrowBigLeftDash } from "lucide-react";

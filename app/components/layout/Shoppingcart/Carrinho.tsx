@@ -3,8 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Plus, Minus, Trash2, ArrowBigRightDash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCarrinho } from "./CarrinhoContext";
-import { useAlert } from "../../hooks/useAlert";
-import Alert from "../ui/alerts";
+import { useAlert } from "../../../hooks/useAlert";
+import Alert from "../../ui/alerts";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 

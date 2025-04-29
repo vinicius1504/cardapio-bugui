@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useMemo } from "react";
 import ProdutoCard from "../ProductCard/ProdutoCard";
-import { useProducts } from "../../hooks/useProducts";
+import { useProducts } from "../../../hooks/useProducts";
 import { AnimatePresence, motion } from "framer-motion";
 import ProdutoModal from "../ProductModal/ProdutoModal";
 import { ProdutoT } from "@/@types/Produto";
-import { useCarrinho } from "../Shoppingcart/CarrinhoContext";
-import { MagneticButton } from "../ui/magnetic-button";
+import { useCarrinho } from "../../layout/Shoppingcart/CarrinhoContext";
+import { MagneticButton } from "../../ui/magnetic-button";
 
 export default function SecaoMenu() {
   const {produtos,loading: produtosLoading, } = useProducts();
