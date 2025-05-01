@@ -10,8 +10,8 @@ export default function Sidebar() {
 
   const links = [
     { href: "/adm", label: "Dashboard" },
-    { href: "/adm/cadastrar", label: "Cadastro de Produtos" },
-    { href: "/adm/config", label: "Configurações" },
+    { href: "/adm/cadastro", label: "Cadastro de Produtos" },
+    { href: "/adm/configuracoes", label: "Configurações" },
   ];
 
   return (

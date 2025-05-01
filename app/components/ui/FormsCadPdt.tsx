@@ -67,24 +67,26 @@ export default function FormCadastroProduto({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    const produtoData = {
+      ...form,
+      preco: form.preco, // Mantendo o preço como string
+    };
+  
     try {
       if (modo === "editar" && form.id) {
-        const { id, ...produtoData } = form;
         await updateProduto(form.id, produtoData);
-        showSuccess("Produto atualizado com sucesso!"); // ✅ Aqui usa o alerta sucesso
-
-      } else if (modo === "cadastrar") {
-        await createProduto(form);
-        showSuccess("Produto cadastrado com sucesso!"); // ✅ Aqui usa o alerta sucesso
+        showSuccess("Produto atualizado com sucesso!");
+      } else {
+        await createProduto(produtoData);
+        showSuccess("Produto cadastrado com sucesso!");
       }
-
-      fecharModal(); // Fecha modal depois de mostrar alerta
+      fecharModal();
     } catch (error) {
-      console.error("Erro ao salvar produto:", error);
-      showError("Erro ao salvar o produto!"); // ✅ Aqui usa o alerta de erro
+      showError("Erro ao salvar o produto.");
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 w-full max-w-2xl">

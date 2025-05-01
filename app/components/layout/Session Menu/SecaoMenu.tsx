@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import ProdutoCard from "../ProductCard/ProdutoCard";
+import ProdutoCard from "../../Produtos/ProductCard/ProdutoCard";
 import { useProducts } from "../../../hooks/useProducts";
 import { AnimatePresence, motion } from "framer-motion";
-import ProdutoModal from "../ProductModal/ProdutoModal";
+import ProdutoModal from "../../Produtos/ProductModal/ProdutoModal";
 import { ProdutoT } from "@/@types/Produto";
-import { useCarrinho } from "../../layout/Shoppingcart/CarrinhoContext";
+import { useCarrinho } from "../Shoppingcart/CarrinhoContext";
 import { MagneticButton } from "../../ui/magnetic-button";
 
 export default function SecaoMenu() {
@@ -28,37 +28,41 @@ export default function SecaoMenu() {
   }, [produtos]);
 
   useEffect(() => {
-    setProdutosFiltrados(produtos);
+    const ativos = produtos.filter((p) => p.ativo); // só pega os ativos
+    setProdutosFiltrados(ativos);
   }, [produtos]);
 
   const filtrarProdutos = (categoria: string) => {
     setLoading(true);
     setCategoriaSelecionada(categoria);
     setLinhasExibidas(4);
-
+  
     setTimeout(() => {
       const filtrados =
         categoria === "Tudo"
-          ? produtos
-          : produtos.filter((p) => p.categoria === categoria);
+          ? produtos.filter((p) => p.ativo)
+          : produtos.filter((p) => p.categoria === categoria && p.ativo);
+  
       setProdutosFiltrados(filtrados);
       setLoading(false);
     }, 200);
   };
-
+  
   const pesquisarProdutos = (termo: string) => {
     setLoading(true);
     setTermoPesquisa(termo);
-
+  
     setTimeout(() => {
-      const filtrados = produtos.filter((p) =>
-        p.nome.toLowerCase().includes(termo.toLowerCase())
+      const filtrados = produtos.filter(
+        (p) =>
+          p.ativo &&
+          p.nome.toLowerCase().includes(termo.toLowerCase())
       );
       setProdutosFiltrados(filtrados);
       setLoading(false);
     }, 200);
   };
-
+  
   return (
     <>
       {produtoSelecionado && (

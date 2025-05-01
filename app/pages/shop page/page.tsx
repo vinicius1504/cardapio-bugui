@@ -1,5 +1,5 @@
 import Header from "../../components/layout/Header-Footer/Header";
-import SecaoMenu from "../../components/Produtos/Session Menu/SecaoMenu";
+import SecaoMenu from "../../components/layout/Session Menu/SecaoMenu";
 // import { produtos } from "./data/produtosL";
 import Footer from "../../components/layout/Header-Footer/Footer";
 

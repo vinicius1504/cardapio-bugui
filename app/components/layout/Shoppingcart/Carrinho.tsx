@@ -17,8 +17,8 @@ export default function Carrinho() {
   const pathname = usePathname(); // Always call this hook
 
   // Prevent rendering the cart UI if on the checkout page
-  const isCheckoutPage = pathname === "/checkout";
-  const isAdmPage = pathname === "/adm";
+  const isCheckoutPage = pathname === "/pages/checkout";
+  const isAdmPage = pathname === "/pages/adm";
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

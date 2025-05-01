@@ -22,36 +22,41 @@ export function useProducts() {
   };
 
   const createProduto = async (novoProduto: ProdutoT) => {
-    try {
-      const res = await fetch("http://localhost:5000/api/produtos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(novoProduto),
-      });
-      const data = await res.json();
-      setProdutos((prev) => [...prev, data]);
+    const res = await fetch("http://localhost:5000/api/produtos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(novoProduto),
+    });
+  
+    const data = await res.json();
+  
+    if (res.ok) {
+      setProdutos((prev) => [...prev, data]); // Atualiza o estado com o novo produto
       return data;
-    } catch (err) {
-      setError("Erro ao cadastrar produto");
+    } else {
+      throw new Error(data.message || "Erro ao criar produto");
     }
   };
-
+  
   const updateProduto = async (id: string, produtoAtualizado: ProdutoT) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/produtos/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(produtoAtualizado),
-      });
-      const data = await res.json();
+    const res = await fetch(`http://localhost:5000/api/produtos/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(produtoAtualizado),
+    });
+  
+    const data = await res.json();
+  
+    if (res.ok) {
       setProdutos((prev) =>
-        prev.map((prod) => (prod._id === id ? data : prod))
+        prev.map((p) => (p._id === id ? { ...p, ...data } : p))
       );
       return data;
-    } catch (err) {
-      setError("Erro ao atualizar produto");
+    } else {
+      throw new Error(data.message || "Erro ao atualizar produto");
     }
   };
+  
 
   const deleteProduto = async (id: string) => {
     try {

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ShoppingCart } from "@deemlol/next-icons";
 import { motion } from "framer-motion";
 // import { adicionar } from "./CarrinhoContext";
-import { useCarrinho } from "../../layout/Shoppingcart/CarrinhoContext";
+import { useCarrinho } from "@/.components/layout/Shoppingcart/CarrinhoContext";
 import { Star } from "lucide-react";
 
 
@@ -26,23 +26,19 @@ export default function ProdutoCard({nome, descricao,preco,imagem,avaliacao = '4
       whileTap={{ scale: 0.95 }}
       // onHoverStart={() => console.log('hover started!')}
     >
-       <div className="min-w-[140px] h-[140px] rounded-2xl overflow-hidden mr-5">
+       <div className="min-w-[140px] h-[140px] rounded-2xl overflow-hidden mr-5 mt-3">
         <Image
           src={imagem || "/placeholder.webp"} // Use a fallback image if imagem is empty
           alt={nome}
           width={140}
           height={140}
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-full "
         />
       </div>
 
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex justify-between items-start">
           <h3 className="text-xl font-bold text-red-700">{nome}</h3>
-          <div className="flex items-center gap-1 text-yellow-500 font-medium">
-            <span className="text-xl"><Star color="#FFC300" strokeWidth={1.75} fill="#FFC300"/></span>
-            <span className="text-gray-700 text-sm">{avaliacao}</span>
-          </div>
         </div>
 
         <p className="text-sm text-gray-600 leading-snug line-clamp-3">

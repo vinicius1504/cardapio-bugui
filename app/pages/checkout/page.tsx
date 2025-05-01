@@ -1,9 +1,9 @@
-// app/checkout/page.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import { useCarrinho } from "@/components/layout/Shoppingcart/CarrinhoContext";
-import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useCep } from "@/hooks/useCep";
+import Image from "next/image";
 import { ArrowBigLeftDash } from "lucide-react";
 
 export default function CheckoutPage() {
@@ -11,21 +11,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [pagamento, setPagamento] = useState("cartao");
   const [cep, setCep] = useState("");
-  const [endereco, setEndereco] = useState({ rua: "", cidade: "" });
-
-  const buscarCep = async (cep: string) => {
-    try {
-      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      if (!res.ok) throw new Error("Erro ao buscar CEP");
-      const data = await res.json();
-      setEndereco({
-        rua: data.logradouro || "",
-        cidade: data.localidade || "",
-      });
-    } catch (error) {
-      console.error("Erro ao buscar CEP:", error);
-    }
-  };
+  const { endereco, setEndereco, buscarCep } = useCep();
 
   useEffect(() => {
     if (cep.length === 8 || cep.length === 9) {
@@ -42,25 +28,21 @@ export default function CheckoutPage() {
         <ArrowBigLeftDash /> Voltar
       </button>
 
-      <h1 className="text-2xl font-bold mb-6 text-red-700 ">Finalizar Pedido</h1>
+      <h1 className="text-2xl font-bold mb-6 text-red-700">Finalizar Pedido</h1>
+
       <div className="grid md:grid-cols-2 gap-6">
         {/* Formulário */}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="font-semibold mb-4">Informações de Entrega</h2>
-          <input
-            className="w-full border p-2 mb-3 rounded"
-            placeholder="Nome completo"
-          />
+          <input className="w-full border p-2 mb-3 rounded" placeholder="Nome completo" />
           <div className="flex gap-2 mb-3">
-            <input
-              className="w-1/2 border p-2 rounded"
-              placeholder="Telefone"
-            />
+            <input className="w-1/2 border p-2 rounded" placeholder="Telefone" />
             <input className="w-1/2 border p-2 rounded" placeholder="Email" />
           </div>
+
           <input
             className="w-full border p-2 mb-3 rounded"
-            placeholder="Endereço"
+            placeholder="Rua"
             value={endereco.rua}
             onChange={(e) => setEndereco({ ...endereco, rua: e.target.value })}
           />
@@ -69,9 +51,7 @@ export default function CheckoutPage() {
               className="w-1/2 border p-2 rounded"
               placeholder="Cidade"
               value={endereco.cidade}
-              onChange={(e) =>
-                setEndereco({ ...endereco, cidade: e.target.value })
-              }
+              onChange={(e) => setEndereco({ ...endereco, cidade: e.target.value })}
             />
             <input
               className="w-1/2 border p-2 rounded"
@@ -123,13 +103,10 @@ export default function CheckoutPage() {
           ) : (
             <ul className="space-y-4 text-sm">
               {itens.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex justify-between items-center border-b pb-2"
-                >
+                <li key={i} className="flex justify-between items-center border-b pb-2">
                   <div className="flex items-center gap-3">
                     <Image
-                      src={item.imagem || "/placeholder.webp"} // Use a fallback image if item.imagem is empty
+                      src={item.imagem || "/placeholder.webp"}
                       alt={item.nome}
                       width={50}
                       height={50}
@@ -143,15 +120,12 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                   <span className="font-semibold text-red-700">
-                    R${" "}
-                    {Number(item.preco.replace("R$ ", "").replace(",", ".")) *
-                      (item.quantidade ?? 0)}
+                    R$ {(Number(item.preco.replace("R$ ", "").replace(",", ".")) * (item.quantidade ?? 1)).toFixed(2)}
                   </span>
                 </li>
               ))}
             </ul>
           )}
-
           <div className="border-t pt-4 mt-4 text-base font-semibold">
             Total: <span className="text-red-700">R$ {total().toFixed(2)}</span>
           </div>
