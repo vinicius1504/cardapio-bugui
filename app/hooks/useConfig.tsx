@@ -2,20 +2,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-export interface ConfigData {
-  nomeEmpresa: string;
-  logoUrl: string;
-  corPrimaria: string;
-  corSecundaria: string;
-  corTexto: string;
-  corDestaque: string;
-  endereco: string;
-  horario: string;
-}
+import { ConfigT } from "@/.@types/Config"; // Ajuste o caminho conforme necessário
 
 export function useConfig() {
-  const [config, setConfig] = useState<ConfigData | null>(null);
+  const [config, setConfig] = useState<ConfigT | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchConfig = async () => {
@@ -30,7 +20,7 @@ export function useConfig() {
     }
   };
 
-  const saveConfig = async (novaConfig: ConfigData) => {
+  const saveConfig = async (novaConfig: ConfigT) => {
     try {
       const res = await fetch("http://localhost:5000/api/config", {
         method: "POST",

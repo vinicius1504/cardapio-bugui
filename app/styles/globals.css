@@ -20,3 +20,27 @@
   scrollbar-width: thin;
   scrollbar-color: #4b5563 transparent;
 }
+
+
+:root {
+  --cor-primaria: #e11d1d;
+  --cor-secundaria: #fff7f7;
+  --cor-texto: #1f2937;
+  --cor-destaque: #facc15;
+}
+
+body {
+  background-color: var(--cor-secundaria);
+  color: var(--cor-texto);
+}
+
+/* Exemplo de uso */
+.btn-primary {
+  background-color: var(--cor-primaria);
+  color: white;
+}
+
+.btn-outline {
+  border: 1px solid var(--cor-destaque);
+  color: var(--cor-destaque);
+}

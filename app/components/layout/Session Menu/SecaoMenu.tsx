@@ -104,46 +104,46 @@ export default function SecaoMenu() {
           />
         </div>
 
-        {/* Produtos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl mx-auto max-h-[calc(100vh-250px)] overflow-y-auto custom-scrollbar">
-          {loading || produtosLoading ? (
-            Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-52 bg-gray-200 animate-pulse rounded-xl"></div>
-            ))
-          ) : (
-            <AnimatePresence mode="wait">
-              {produtosVisiveis.map((produto, index) => (
-                <motion.div
-                  key={produto.nome + index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="cursor-pointer"
-                  onClick={() => setProdutoSelecionado(produto)}
-                >
-                  <ProdutoCard {...produto} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          )}
-        </div>
-
-        {/* Ver mais */}
-        {podeMostrarMais && (
-          <div className="text-center mt-6">
-            <div className="relative inline-block">
-              <MagneticButton>
-                <button
-                  onClick={() => setLinhasExibidas((prev) => prev + 4)}
-                  className="px-6 py-2 bg-red-700 text-white rounded-full hover:bg-red-800 transition"
-                >
-                  Ver mais
-                </button>
-              </MagneticButton>
-            </div>
+          {/* Produtos */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl mx-auto max-h-[calc(100vh-250px)] overflow-y-auto custom-scrollbar">
+            {loading || produtosLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-52 bg-gray-200 animate-pulse rounded-xl"></div>
+              ))
+            ) : (
+              <AnimatePresence mode="wait">
+                {produtosVisiveis.map((produto, index) => (
+                  <motion.div
+                    key={produto.nome + index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    className="cursor-pointer"
+                    onClick={() => setProdutoSelecionado(produto)}
+                  >
+                    <ProdutoCard {...produto} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            )}
           </div>
-        )}
+
+          {/* Ver mais */}
+          {podeMostrarMais && (
+            <div className="text-center mt-6">
+              <div className="relative inline-block">
+                <MagneticButton>
+                  <button
+                    onClick={() => setLinhasExibidas((prev) => prev + 4)}
+                    className="px-6 py-2 bg-red-700 text-white rounded-full hover:bg-red-800 transition"
+                  >
+                    Ver mais
+                  </button>
+                </MagneticButton>
+              </div>
+            </div>
+          )}
       </section>
     </>
   );
